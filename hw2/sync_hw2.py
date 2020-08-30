@@ -12,7 +12,7 @@ def sync_hw2():
     drive.mount('/content/drive')
 
     dir = "drive/My Drive/MEAM517_colab/hw2/"
-    git_url = "https://raw.githubusercontent.com/yminchen/MEAM517_Colab/test/test/"
+    git_url = "https://raw.githubusercontent.com/mposa/MEAM517/hw2/hw2/"
 
     files = ["quadrotor.py", "quadrotor_generator.py", "quad_sim.py", "trajectories.py"]
 
