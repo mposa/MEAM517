@@ -14,10 +14,10 @@ def sync_hw2():
 
     dir = "drive/My Drive/MEAM517_colab/hw2/"
     git_url = "https://raw.githubusercontent.com/mposa/MEAM517/hw2/hw2/"
-    files = ["quadrotor.py", "quadrotor_generator.py", "quad_sim.py", "trajectories.py"]
+    files = ["quadrotor.py", "quad_sim.py", "trajectories.py"]
 
     # 1. Copy files from Colab to Google drive
-    if path.exists("quadrotor.py"):
+    if path.exists(files[0]):
       if not path.exists("drive/My Drive/MEAM517_colab/hw2"):
         # create hw folder in google drive
         Path(dir).mkdir(parents=True, exist_ok=True)
