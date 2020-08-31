@@ -3,7 +3,7 @@ Reference: https://github.com/RussTedrake/underactuated/blob/master/scripts/setu
 
 In Colab, add the following piece of code to the beginning of each script to install Drake if it's not installed yet: 
 ```
-!curl -s https://raw.githubusercontent.com/yminchen/MEAM517_Colab/master/colab_drake_setup > jupyter_setup.py
+!curl -s https://raw.githubusercontent.com/mposa/MEAM517/hw2/colab_drake_setup > jupyter_setup.py
 from jupyter_setup import setup_drake
 setup_drake()
 ```
