@@ -6,9 +6,11 @@ def main():
     N = 15
     M = 5
 
+    goal = [3,10]
+
     use_obstacle = True
     # [xmin, xmax, ymin, ymax]
-    obs_range = np.array([0, 5, 3, 5])
+    obs_range = np.array([0, 10, 3, 5])
 
     # Build transition and cost matrix as MDP
     # T(x,y,a,xn,yn)
@@ -52,7 +54,7 @@ def main():
 
     # Build cost matrix
     C = np.ones([N, N, M])
-    C[0, 0,:] = np.zeros([1, 1, M])
+    C[goal[0], goal[1],:] = np.zeros([1, 1, M])
     
 
     # Reshape T to be (N*N*M, N*N) where first index represents current
@@ -77,17 +79,21 @@ def main():
     error = 1
     iter = 0
     min_error = 1e-6
-    max_iter = 100
+    max_iter = 3*N
     gamma = 1
+
+    cmap = plt.get_cmap("inferno")
     
     
 
     plt.ion()
     fig = plt.figure()
-    image = plt.imshow(V.reshape(N, N).T, vmin=0, vmax=4*N)
-    fig.colorbar(image)
+    image = plt.imshow(V.reshape(N, N).T, vmin=0, vmax=3*N, cmap=cmap)
+    fig.colorbar(image, cmap=cmap)
     plt.draw()
     plt.pause(0.001)
+    mng = plt.get_current_fig_manager()
+    mng.window.showMaximized()
     plt.show()
 
     while error > min_error and iter < max_iter:
@@ -101,10 +107,10 @@ def main():
         min_ind = np.argmin(V_update_by_cost, axis=1)
         V = V_update_by_cost[np.arange(V_update_by_cost.shape[0]), min_ind]
         
-        iter = iter + 1
         error = np.max(np.abs(V_prev - V)) / np.max(V)
 
-        plt.imshow(V.reshape(N, N).T, vmin=0, vmax=4*N)
+        plt.imshow(V.reshape(N, N).T, vmin=0, vmax=3 * N, cmap=cmap)
+        plt.title("Iteration " + str(iter))
         plt.draw()
         plt.pause(0.001)
 

@@ -36,15 +36,17 @@ def main():
     iter = 0
     min_error = 1e-6
 
-    fig_1 = plt.figure()
-    ax_1 = fig_1.gca(projection='3d')
-
-    fig_2 = plt.figure()
-    ax_2 = fig_2.gca(projection='3d')
+    fig = plt.figure()
+    ax_1 = fig.add_subplot(2, 1, 1, projection='3d')
+    ax_2 = fig.add_subplot(2, 1, 2, projection='3d')
 
     plt.ion()
     surf_1 = ax_1.plot_surface(X_grid[0], X_grid[1], V.reshape(N, N).T)
     surf_2 = ax_2.plot_surface(X_grid[0], X_grid[1], u_opt.reshape(N, N).T)
+
+    mng = plt.get_current_fig_manager()
+    mng.window.showMaximized()
+
     plt.show()
 
     # Reshape T to be (N*N*M, N*N) where first index represents current
@@ -84,7 +86,8 @@ def main():
                                        cmap=cm.coolwarm)
             ax_2.set_xlabel('$x$', fontsize=16)
             ax_2.set_ylabel('$\dot x$', fontsize=16)
-            ax_1.set_zlabel('$u$', fontsize=16)
+            ax_2.set_zlabel('$u$', fontsize=16)
+
             plt.draw()
             plt.pause(0.001)
 
