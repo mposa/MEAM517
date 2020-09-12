@@ -4,16 +4,17 @@ from matplotlib import cm
 from discretize_system import discretize_second_order_system
 
 def main():
-    N = 31  # x-discretization
-    M = 11  # u-discretization
-    x_max = 2  # grid size for x and xdot
-    u_max = 1  # max input
+    N = 101  # x-discretization
+    M = 21  # u-discretization
+    x_max = 2 * np.pi  # grid size for x and xdot
+    xdot_max = 6;
+    u_max = 3  # max input
     gamma = .995  # discount factor
-    dt = .01  # timestep size
+    dt = 1e-3  # timestep size
     max_iter = 10000
     
     x = np.linspace(-x_max, x_max, N)
-    xdot = np.linspace(-x_max, x_max, N)
+    xdot = np.linspace(-xdot_max, xdot_max, N)
     u = np.linspace(-u_max, u_max, M)
 
     X_grid = np.meshgrid(x, xdot)
@@ -23,18 +24,22 @@ def main():
     u_opt = np.zeros(N*N)
 
     # dynamics
-    f = lambda x, xdot, u: u
+    m = 1
+    L = .5
+    g = 9.8
+    b = .1
+    f = lambda x, xdot, u: (u-b*xdot - m*g*L*np.sin(x-np.pi))/(m * L**2)
 
     # running cost
-    # cost = lambda x, xdot, u: x ** 2 + xdot ** 2 + 2 * u ** 2
-    cost = lambda x, xdot, u: int(x != 0 or xdot != 0)
+    # cost = lambda x, xdot, u: x ** 2 + xdot ** 2 + u ** 2
+    cost = lambda x, xdot, u: int(x**2 + xdot**2 > 0.05 )
 
     [T, C] = discretize_second_order_system(f, cost, x, xdot, u, dt)
 
     # Initialize error and iteration counter    
     error = 1
     iter = 0
-    min_error = 1e-6
+    min_error = 1e-5
 
     fig = plt.figure()
     ax_1 = fig.add_subplot(2, 1, 1, projection='3d')
@@ -49,11 +54,11 @@ def main():
 
     plt.show()
 
+
     while error > min_error and iter < max_iter:
         V_prev = np.copy(V)
         # Vectorized optimization. Reshapes V and C to represent states as a
         # single dimension
-
         V_update_by_cost = np.reshape(C + gamma*T.dot(V), [N*N, M])
             
         # Min over cost

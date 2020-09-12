@@ -51,23 +51,18 @@ def main():
             else:
                 T[i, j, 4, i, j - 1] = 1
 
+    T = T.reshape(N * N * M, N * N)
+
 
     # Build cost matrix
     C = np.ones([N, N, M])
     C[goal[0], goal[1],:] = np.zeros([1, 1, M])
+    C = C.reshape(N * N * M)
     
-
-    # Reshape T to be (N*N*M, N*N) where first index represents current
-    # state/action, and secon next state
-    T_shape = T.reshape(N * N * M, N * N)
-    
-    # Reshape C to be (N*N*M, 1)
-    C_shape = C.reshape(N * N * M)
-
 
     # Different possible initializations
     # V = 50 * np.random.rand(N * N)
-    V = np.zeros([N*N ])
+    V = np.zeros(N*N)
     # V = 50 * np.ones([N*N])
 
     V[0] = 0
@@ -100,8 +95,8 @@ def main():
         V_prev = np.copy(V)
         # Vectorized optimization. Reshapes V and C to represent states as a
         # single dimension
-        V_update_by_cost = np.reshape(
-            C_shape + gamma*np.matmul(T_shape, V), [N*N, M])
+
+        V_update_by_cost = np.reshape(C + gamma*T.dot(V), [N*N, M])
             
         # Min over cost
         min_ind = np.argmin(V_update_by_cost, axis=1)
