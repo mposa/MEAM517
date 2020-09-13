@@ -6,6 +6,7 @@ from os import path
 from shutil import copyfile
 import urllib.request
 from pathlib import Path
+import re
 
 def sync_hw(hw_id, files):
   if 'google.colab' in str(get_ipython()):
@@ -26,4 +27,4 @@ def sync_hw(hw_id, files):
 
       # create a symbolic link to the file in google drive if it doesn't exist
       if not path.exists(file): 
-        os.system("ln -s " + dir + file + " " + file)
+        os.system(re.escape("ln -s " + dir + file + " " + file))
