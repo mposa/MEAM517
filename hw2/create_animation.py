@@ -28,12 +28,12 @@ def create_animation(x, x_des, n_frame):
     ax.plot(x_anim[:i+1, 0], x_anim[:i+1, 1], '--', label='actual trajectory')
     plot=ax.scatter(x_anim[i, 0], x_anim[i, 1], c='r', label='quadrotor position')
 
+    #ax.set_xlim(x_min,x_max)
+    #ax.set_ylim(y_min,y_max)
     ax.set_xlabel('y (m)')
-    ax.set_xlim(x_min,x_max)
     ax.set_ylabel('z (m)')
-    ax.set_ylim(y_min,y_max)
     ax.set_aspect('equal')
-    ax.legend()
+    ax.legend(loc='upper left')
 
     return plot
 
