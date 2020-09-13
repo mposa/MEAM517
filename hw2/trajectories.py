@@ -1,6 +1,9 @@
 import numpy as np
 from math import *
 
+'''
+DO NOT MODIFY
+'''
 def x_d(t):
   return np.array([3*cos(t), 3*sin(t), atan(3*cos(t)/(9.81 - 3*sin(t))), -3*sin(t), 3*cos(t), (-3*(1 - 0.305810397553517*sin(t))**2*sin(t) + 0.09351999925184*(9.81 - 3*sin(t))*cos(t)**2)/((9.81 - 3*sin(t))*((1 - 0.305810397553517*sin(t))**2 + 0.09351999925184*cos(t)**2))])
 

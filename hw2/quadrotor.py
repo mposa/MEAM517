@@ -50,7 +50,7 @@ class Quadrotor(object):
     R = self.R
 
     dLdt = np.zeros((6,6))
-    #TODO compute d/dt L(t)
+    # TODO: compute d/dt L(t)
 
     return dLdt
 

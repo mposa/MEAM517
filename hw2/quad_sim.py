@@ -5,6 +5,7 @@ from quadrotor import Quadrotor
 from trajectories import *
 import matplotlib.pyplot as plt
 
+# Dynamics for the quadrotor
 def _f(x, u):
   g = 9.81
   m = 1
@@ -59,3 +60,25 @@ def simulate_quadrotor(x0, tf, quadrotor):
   u = np.array(u)
   t = np.array(t)
   return x, u, t
+
+if __name__ == '__main__':
+  tf = 2*pi;
+  R = np.eye(2);
+  Q = np.diag([10, 10, 1, 1, 1, 1]);
+  Qf = Q;
+
+  quadrotor = Quadrotor(Q, R, Qf, tf);
+
+  x0 = 0.5 * np.ones((6,)) + x_d(0.0)
+  x, u, t = simulate_quadrotor(x0, tf, quadrotor)
+  plt.plot(x[:, 0], x[:, 1])
+
+  n_samples = 1000
+  t_samples = np.linspace(0.0, tf, n_samples)
+  x_des = np.zeros((n_samples, 6))
+  for i in range(t_samples.shape[0]):
+    x_des[i] = x_d(t_samples[i])
+  plt.plot(x_des[:, 0], x_des[:, 1], label='desired trajectory')
+  plt.plot(x[:, 0], x[:, 1], label='actual trajectory')
+  plt.legend()
+  plt.show()
