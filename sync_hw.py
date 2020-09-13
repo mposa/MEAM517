@@ -6,7 +6,7 @@ from shutil import copyfile
 import urllib.request
 from pathlib import Path
 
-def sync_hw2(hw_id, files):
+def sync_hw(hw_id, files):
   if 'google.colab' in str(get_ipython()):
     # mount google drive to Colab
     from google.colab import drive
