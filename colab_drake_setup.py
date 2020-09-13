@@ -42,6 +42,3 @@ def setup():
         v = sys.version_info
         sys.path.append("/opt/drake/lib/python{}.{}/site-packages".format(
             v.major, v.minor))
-
-if __name__ == "__main__":
-    setup()
