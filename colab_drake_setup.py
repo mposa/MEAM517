@@ -23,7 +23,6 @@ def setup():
     from IPython import get_ipython
 
     # decrease the height of jupyter's output box
-    from IPython import display 
     from IPython.display import Javascript
     display(Javascript('''google.colab.output.setIframeHeight(0, true, {maxHeight: 100})'''))
 
