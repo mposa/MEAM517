@@ -9,10 +9,6 @@ setup()
 ```
 """
 
-import sys
-import platform
-from IPython import get_ipython
-
 def setup():
     """Install drake (if necessary) and set up the path.
 
@@ -22,6 +18,9 @@ def setup():
     hours. Colab will ask you to "Reset all runtimes", say no to save yourself
     the reinstall.
     """
+    import sys
+    import platform
+    from IPython import get_ipython
 
     # decrease the height of jupyter's output box
     from IPython.display import Javascript
