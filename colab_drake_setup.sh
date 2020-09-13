@@ -2,6 +2,6 @@
 
 curl -s https://raw.githubusercontent.com/mposa/MEAM517/hw2/colab_drake_setup.py > drake_setup.py
 python3 drake_setup.py
-rm -rf sample_data
-rm drake.tar.gz
-rm drake_setup.py
+# rm -rf sample_data
+# rm drake.tar.gz
+# rm drake_setup.py
