@@ -15,7 +15,7 @@ def sync_hw(hw_id, files):
     drive.mount('/content/drive')
 
     dir = "drive/My Drive/MEAM517_colab/hw"+str(hw_id)+"/"
-    git_url = "https://raw.githubusercontent.com/mposa/MEAM517/hw"+str(hw_id)+"/hw"+str(hw_id)+"/"
+    git_url = "https://raw.githubusercontent.com/mposa/MEAM517/master/hw"+str(hw_id)+"/"
 
     for file in files:
       # download the file from github to google drive if it doesn't exist 
