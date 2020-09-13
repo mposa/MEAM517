@@ -42,7 +42,7 @@ def value_iteration(world, threshold, gamma, plotting=True):
   return V, u_opt
 
 if __name__=="__main__":
-  world = gridworld() 
+  world = Gridworld() 
   threshold = 0.0001
   gamma = 0.9
   # value_iteration(world, threshold, gamma, False)
