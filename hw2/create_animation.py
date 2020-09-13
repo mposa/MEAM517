@@ -4,7 +4,14 @@ import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import matplotlib.animation as animation
 
-def create_animation(x, x_des, n_frame):
+def create_animation(x, x_d, tf, n_frame):
+  # Sample desired trajectory
+  n_samples = 1000
+  t_samples = np.linspace(0.0, tf, n_samples)
+  x_des = np.zeros((n_samples, 6))
+  for i in range(t_samples.shape[0]):
+    x_des[i] = x_d(t_samples[i])
+
   from matplotlib import rc
   rc('animation', html='jshtml')
 
@@ -28,12 +35,12 @@ def create_animation(x, x_des, n_frame):
     ax.plot(x_anim[:i+1, 0], x_anim[:i+1, 1], '--', label='actual trajectory')
     plot=ax.scatter(x_anim[i, 0], x_anim[i, 1], c='r', label='quadrotor position')
 
-    ax.set_xlabel('y (m)')
-    ax.set_xlim(x_min,x_max)
-    ax.set_ylabel('z (m)')
-    ax.set_ylim(y_min,y_max)
+    # ax.set_xlabel('y (m)')
+    # ax.set_xlim(x_min,x_max)
+    # ax.set_ylabel('z (m)')
+    # ax.set_ylim(y_min,y_max)
     ax.set_aspect('equal')
-    ax.legend()
+    ax.legend(loc='upper left')
 
     return plot
 
