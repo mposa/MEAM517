@@ -27,4 +27,4 @@ def sync_hw(hw_id, files):
 
       # create a symbolic link to the file in google drive if it doesn't exist
       if not path.exists(file): 
-        os.system(re.escape("ln -s " + dir + file + " " + file))
+        os.system("ln -s " + re.escape(dir) + file + " " + file)
