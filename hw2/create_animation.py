@@ -28,13 +28,20 @@ def create_animation(x, x_d, tf, n_frame):
   for i in range(n_frame):
     x_anim[i, :] = x[frame_idx[i], :]
 
+  a = 0.25
+  y = x_anim[:, 0]
+  z = x_anim[:, 1]
+  theta = x_anim[:, 2]
+
   def frame(i):
     ax.clear()
 
     ax.plot(x_des[:, 0], x_des[:, 1], label='desired trajectory')
     ax.plot(x_anim[:i+1, 0], x_anim[:i+1, 1], '--', label='actual trajectory')
-    plot=ax.scatter(x_anim[i, 0], x_anim[i, 1], c='r', label='quadrotor position')
-
+    # plot=ax.scatter(x_anim[i, 0], x_anim[i, 1], c='r', label='quadrotor position')
+    plot = ax.plot([y[i] + a*cos(theta[i]), y[i] - a*cos(theta[i])],
+                   [z[i] + a*sin(theta[i]), z[i] - a*sin(theta[i])] , 'g','LineWidtheeta',3)
+    
     #ax.set_xlim(x_min,x_max)
     #ax.set_ylim(y_min,y_max)
     ax.set_xlabel('y (m)')
