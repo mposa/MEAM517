@@ -1,11 +1,23 @@
+import importlib
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
+import discretize_system
+importlib.reload(discretize_system)
 from discretize_system import discretize_second_order_system
+from mpl_toolkits.mplot3d import Axes3D
 
-def main():
+def run_iteration():
+    # Default resolution
     N = 31  # x-discretization
-    M = 11  # u-discretization
+    M = 21  # u-discretization
+
+    # Modify the resolution here
+    # 
+    # N = 11 
+    # M = 5 
+
     x_max = 2  # grid size for x and xdot
     u_max = 1  # max input
     gamma = .995  # discount factor
@@ -19,35 +31,37 @@ def main():
     X_grid = np.meshgrid(x, xdot)
 
     V = np.zeros(N*N)
-
     u_opt = np.zeros(N*N)
+
+    V_star = np.zeros((N,N))
+    u_star = np.zeros((N,N))
+
+    # TODO: Fill in V_star and u_star with the analytical solution derived in part a
 
     # dynamics
     f = lambda x, xdot, u: u
 
     # running cost
-    # cost = lambda x, xdot, u: x ** 2 + xdot ** 2 + 2 * u ** 2
-    cost = lambda x, xdot, u: int(x != 0 or xdot != 0)
+    Q = np.array([[5, 1],
+                  [1, 1]])
+    cost = lambda x, xdot, u: 0.5 * (np.array([x, xdot]) @ Q @ np.array([x, xdot]).T + u ** 2)
 
     [T, C] = discretize_second_order_system(f, cost, x, xdot, u, dt)
 
     # Initialize error and iteration counter    
     error = 1
     iter = 0
-    min_error = 1e-6
+    min_error = 1e-5
 
-    fig = plt.figure()
-    ax_1 = fig.add_subplot(2, 1, 1, projection='3d')
-    ax_2 = fig.add_subplot(2, 1, 2, projection='3d')
+    fig1 = plt.figure(r'$V$')
+    ax_1 = fig1.add_subplot(1, 1, 1, projection='3d')
+    fig2 = plt.figure(r'$u$')
+    ax_2 = fig2.add_subplot(1, 1, 1, projection='3d')
+    fig3 = plt.figure(r'$V - V^*$')
+    ax_3 = fig3.add_subplot(1, 1, 1, projection='3d')
+    fig4 = plt.figure(r'$u - u^*$')
+    ax_4 = fig4.add_subplot(1, 1, 1, projection='3d')
 
-    plt.ion()
-    surf_1 = ax_1.plot_surface(X_grid[0], X_grid[1], V.reshape(N, N).T)
-    surf_2 = ax_2.plot_surface(X_grid[0], X_grid[1], u_opt.reshape(N, N).T)
-
-    mng = plt.get_current_fig_manager()
-    mng.window.showMaximized()
-
-    plt.show()
 
     while error > min_error and iter < max_iter:
         V_prev = np.copy(V)
@@ -64,28 +78,41 @@ def main():
         iter = iter + 1
         error = np.max(np.abs(V_prev - V)) / np.max(V)
 
-        if iter % 20 == 0:
-            surf_1.remove()
-            surf_1 = ax_1.plot_surface(X_grid[0], X_grid[1], V.reshape(N, N).T,
-                                       cmap=cm.coolwarm)
-            ax_1.set_xlabel('$x$', fontsize=16)
-            ax_1.set_ylabel('$\dot x$', fontsize=16)
-            ax_1.set_zlabel('$V$', fontsize=16)
-            surf_2.remove()
-            surf_2 = ax_2.plot_surface(X_grid[0], X_grid[1],
-                                       u_opt.reshape(N, N).T,
-                                       cmap=cm.coolwarm)
-            ax_2.set_xlabel('$x$', fontsize=16)
-            ax_2.set_ylabel('$\dot x$', fontsize=16)
-            ax_2.set_zlabel('$u$', fontsize=16)
 
-            plt.draw()
-            plt.pause(0.001)
+    surf_1 = ax_1.plot_surface(X_grid[0], X_grid[1], V.reshape(N, N).T,
+                                cmap=cm.coolwarm)
+    surf_2 = ax_2.plot_surface(X_grid[0], X_grid[1],
+                                u_opt.reshape(N, N).T,
+                                cmap=cm.coolwarm)
+    surf_3 = ax_3.plot_surface(X_grid[0], X_grid[1],
+                                V.reshape(N, N).T - V_star.T,
+                                cmap=cm.coolwarm)
+    surf_4 = ax_4.plot_surface(X_grid[0], X_grid[1],
+                                u_opt.reshape(N, N).T - u_star,
+                                cmap=cm.coolwarm)
+
+    ax_1.set_xlabel('$x$', fontsize=16)
+    ax_1.set_ylabel('$\dot x$', fontsize=16)
+    ax_1.set_zlabel('$V$', fontsize=16)
+    ax_2.set_xlabel('$x$', fontsize=16)
+    ax_2.set_ylabel('$\dot x$', fontsize=16)
+    ax_2.set_zlabel('$u$', fontsize=16)
+    ax_3.set_xlabel('$x$', fontsize=16)
+    ax_3.set_ylabel('$\dot x$', fontsize=16)
+    ax_3.set_zlabel('$V - V^*$', fontsize=16)
+    ax_4.set_xlabel('$x$', fontsize=16)
+    ax_4.set_ylabel('$\dot x$', fontsize=16)
+    ax_4.set_zlabel('$u - u^*$', fontsize=16)
 
     print("Done! Total iterations: " + str(iter))
-    input()
-    plt.show()
+
+    return fig1, fig2, fig3, fig4
 
     
 if __name__ == "__main__":
-    main()
+    fig_V, fig_u, fig_V_diff, fig_u_diff = run_iteration()
+
+    fig_V_diff.savefig("dV.png", dpi=240)
+    fig_u_diff.savefig("du.png", dpi=240)
+
+    plt.show();

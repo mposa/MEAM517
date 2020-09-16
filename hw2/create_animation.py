@@ -51,5 +51,5 @@ def create_animation(x, x_d, tf, n_frame):
 
     return plot
 
-  return animation.FuncAnimation(fig, frame, frames=n_frame, blit=False, repeat=False)
+  return animation.FuncAnimation(fig, frame, frames=n_frame, blit=False, repeat=False), fig
   

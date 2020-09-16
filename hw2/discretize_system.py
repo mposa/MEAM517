@@ -55,7 +55,7 @@ def discretize_second_order_system(f, cost, x, xdot, u, dt):
                 # T_cols[ind:ind+3] = [ind:ind+3]
                 # T_cols[ind:ind+3] = [ind:ind+3]
                 # T[i, j, k, l, m] = w
-        print(i)
+        # print(i)
 
 
     T = sparse.csr_matrix((T_data, (T_rows, T_cols)),
