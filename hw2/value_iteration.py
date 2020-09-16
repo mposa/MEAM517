@@ -24,6 +24,7 @@ def plot_value_function_and_optimal_policy(world, V, u_opt):
         plt.arrow(col, row, -arrow_length, 0, head_width=0.1)
       else:
         raise ValueError("Invalid action")
+  plt.savefig('value_function.png', dpi=240)
   plt.show()
 
 def value_iteration(world, threshold, gamma, plotting=True):
