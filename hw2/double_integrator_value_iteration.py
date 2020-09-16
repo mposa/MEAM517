@@ -24,6 +24,13 @@ def run_iteration():
     # N = 11 
     # M = 5 
 
+    # Analytical solutions of value function and optimal policy 
+    V_star = np.zeros((N,N))
+    u_star = np.zeros((N,N))
+    # TODO: Fill in V_star and u_star with the analytical solution derived in part a
+
+
+    # Parameters
     x_max = 2  # grid size for x and xdot
     u_max = 1  # max input
     gamma = .995  # discount factor
@@ -36,14 +43,6 @@ def run_iteration():
 
     X_grid = np.meshgrid(x, xdot)
 
-    V = np.zeros(N*N)
-    u_opt = np.zeros(N*N)
-
-    V_star = np.zeros((N,N))
-    u_star = np.zeros((N,N))
-
-    # TODO: Fill in V_star and u_star with the analytical solution derived in part a
-
     # Dynamics
     f = lambda x, xdot, u: u
 
@@ -53,6 +52,10 @@ def run_iteration():
     cost = lambda x, xdot, u: 0.5 * (np.array([x, xdot]) @ Q @ np.array([x, xdot]).T + u ** 2)
 
     [T, C] = discretize_second_order_system(f, cost, x, xdot, u, dt)
+
+    # Initilaize value function and optimal policy for value iteration
+    V = np.zeros(N*N)
+    u_opt = np.zeros(N*N)
 
     # Initialize error and iteration counter    
     error = 1
