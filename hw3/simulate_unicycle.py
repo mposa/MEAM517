@@ -2,7 +2,15 @@ from math import *
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
+import importlib
 
+# Reload the module to use the latest code
+import unicycle_spline
+import unicycle_input
+import plot_unicycle_trajectory
+importlib.reload(unicycle_spline)
+importlib.reload(unicycle_input)
+importlib.reload(plot_unicycle_trajectory)
 from unicycle_spline import unicycle_spline
 from unicycle_input import unicycle_input
 from plot_unicycle_trajectory import plot_unicycle_trajectory

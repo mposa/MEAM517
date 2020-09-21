@@ -5,7 +5,8 @@ import matplotlib.animation as animation
 from math import *
 from IPython import get_ipython
 
-from unicycle_spline import unicycle_spline
+from matplotlib import rc
+rc('animation', html='jshtml')
 
 def plot_unicycle_trajectory(t, x, y_spline, z_spline, n_frame = 10):
     y_d = y_spline(t);
