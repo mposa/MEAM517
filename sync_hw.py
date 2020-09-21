@@ -1,5 +1,5 @@
 """
-Synchronize homework files (either save files to google drive or copy files from github to google drive) 
+Synchronize homework files (link to google drive's hw files; if hw files don't exist in google drive, download files from github) 
 """
 import os
 from os import path
@@ -25,6 +25,6 @@ def sync_hw(hw_id, files):
           Path(dir).mkdir(parents=True, exist_ok=True)
         urllib.request.urlretrieve(git_url + file, dir + file)
 
-      # create a symbolic link to the file in google drive if it doesn't exist
+      # create a symbolic link to the file in google drive if the link doesn't exist
       if not path.exists(file): 
         os.system("ln -s " + re.escape(dir) + file + " " + file)
