@@ -8,14 +8,18 @@ import urllib.request
 from pathlib import Path
 import re
 
-def sync_hw(hw_id, files):
+def sync_hw(hw_id, files, from_master_branch=True):
   if 'google.colab' in str(get_ipython()):
     # mount google drive to Colab
     from google.colab import drive
     drive.mount('/content/drive')
 
     dir = "drive/My Drive/MEAM517_colab/hw"+str(hw_id)+"/"
-    git_url = "https://raw.githubusercontent.com/mposa/MEAM517/master/hw"+str(hw_id)+"/"
+    if from_master_branch:
+      branch = "master"
+    else: 
+      branch = "hw" + str(hw_id)
+    git_url = "https://raw.githubusercontent.com/mposa/MEAM517/"+branch+"/hw"+str(hw_id)+"/"
 
     for file in files:
       # download the file from github to google drive if it doesn't exist 
