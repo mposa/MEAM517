@@ -90,8 +90,8 @@ def simulate_cartpole(cartpole, x0, tf, plotting=False):
 
   sol = solve_ivp(f, (0, tf), x0, max_step=1e-3)
   if plotting:
-    animation, fig = plot_cartpole_trajectory(sol.t, sol.y, n_frames)
-    return animation, fig, 
+    anim, fig = plot_cartpole_trajectory(sol.t, sol.y, n_frames)
+    return anim, fig
   else:
     return sol.y
 
