@@ -8,7 +8,7 @@ from IPython import get_ipython
 from matplotlib import rc
 rc('animation', html='jshtml')
 
-def plot_unicycle_trajectory(t, x, y_spline, z_spline, n_frame = 10):
+def plot_unicycle_trajectory(t, x, y_spline, z_spline, obs, n_frame = 10):
   y_d = y_spline(t);
   z_d = z_spline(t);
 
@@ -42,7 +42,7 @@ def plot_unicycle_trajectory(t, x, y_spline, z_spline, n_frame = 10):
     ax.plot(x[:frame_idx[i], 0], x[:frame_idx[i], 1], '--', label='Actual trajectory')
 
     # Obstacle
-    a_circle = plt.Circle((5, 0), 3, color='r', label='Obstacle')
+    a_circle = plt.Circle((obs.y, obs.z), obs.radius, color='r', label='Obstacle')
     ax.add_artist(a_circle)
     # Unicycle
     plot = ax.plot([y[i] + a*cos(theta[i]), y[i] - a*cos(theta[i])],
@@ -70,4 +70,4 @@ def plot_unicycle_trajectory(t, x, y_spline, z_spline, n_frame = 10):
   anim = animation.FuncAnimation(fig, frame, frames=n_frame, blit=False, repeat=False)
   plt.close()
 
-  return anim
+  return anim, fig
