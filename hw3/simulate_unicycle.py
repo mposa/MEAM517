@@ -51,7 +51,7 @@ def simulate_unicycle():
   x0 = np.array([0, 0, np.arctan2(z_spline(t0,1), y_spline(t0,1))])
 
   # Integrate 
-  sol = solve_ivp(f, (0, tf), x0, t_eval=np.linspace(t0, tf, 100))
+  sol = solve_ivp(f, (0, tf), x0, t_eval=np.linspace(t0, tf, 100), max_step=1e-2)
 
   return plot_unicycle_trajectory(sol.t, sol.y.T, y_spline, z_spline, obs)
 
