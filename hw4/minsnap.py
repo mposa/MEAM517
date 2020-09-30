@@ -115,12 +115,4 @@ if __name__ == '__main__':
     plt.plot(t, minsnap_trajectory(t,4)[:], label='4th derivative')
     plt.legend()
     
-    fig6 = plt.figure(figsize=(4,3))
-    plt.plot(t, minsnap_trajectory(t,5)[:], label='5th derivative')
-    plt.legend()
-
-    fig7 = plt.figure(figsize=(4,3))
-    plt.plot(t, minsnap_trajectory(t,6)[:], label='6th derivative')
-    plt.legend()
-
   plt.show()  
