@@ -1,30 +1,53 @@
 import numpy as np
-from pos_constraints import Ab_i1
-from derivative_constraints import Ab_i2
-from minsnap_cost import H_i1
+import matplotlib.pyplot as plt
+from math import factorial, atan2
 from scipy.interpolate import PPoly
 
-from cvxopt import matrix
+from pydrake.solvers import mathematicalprogram as mp
+from pydrake.solvers.osqp import OsqpSolver
 
+import importlib
+
+import pos_constraints
+importlib.reload(pos_constraints)
+from pos_constraints import Ab_i1
+
+def add_pos_constraints(prog, sigma, n, d, w, dt):
+  # Add A_i1 constraints here
+  for i in range(n):
+    Aeq_i, beq_i = Ab_i1(i, n, d, dt[i], w[i], w[i + 1])
+    prog.AddLinearEqualityConstraint(Aeq_i, beq_i, sigma.flatten())
+
+def add_continuity_constraints(prog, sigma, n, d, dt):
+  # TDOO: Add A_i2 constraints here
+  # Hint: Use AddLinearEqualityConstraint(expr, value)
+  pass
+  
+def add_minsnap_cost(prog, sigma, n, d, dt):
+  # TODO: Add cost function here
+  # Use AddQuadraticCost to add a quadratic cost expression
+  pass
 
 def minsnap(n, d, w, dt):
-  nvars = 2*d*n
+  n_dim = 2
+  dim_names = ['y', 'z']
 
-  Aeq, beq = generate_constraint_matrices(n, d, w, dt)
-  H = generate_H_matrix(n, d, dt)
+  prog = mp.MathematicalProgram()
+  # sigma is a (n, n_dim, d) matrix of decision variables
+  sigma = np.zeros((n, d, n_dim), dtype="object")
+  for i in range(n):
+    for j in range(d):
+      sigma[i][j] = prog.NewContinuousVariables(n_dim, "sigma_" + str(i) + ',' +str(j)) 
 
+  add_pos_constraints(prog, sigma, n, d, w, dt)
+  add_continuity_constraints(prog, sigma, n, d, dt)
+  add_minsnap_cost(prog, sigma, n, d, dt)  
 
-  H = matrix(H)
-  f = matrix(0.0, (nvars, 1))
-  G = matrix(0.0, (0, nvars))
-  h = matrix(0.0, (0, 1))
-  A = matrix(Aeq)
-  b = matrix(beq)
-  result = qp(H, f, G, h, A, b)
-
-  # Extract v from the QP solution
-  v = np.array(result['x'])
-
+  solver = OsqpSolver()
+  result = solver.Solve(prog)
+  print(result.get_solution_result())
+  v = result.GetSolution()
+  
   # Reconstruct the trajectory from the polynomial coefficients
   coeffs_y = v[::2]
   coeffs_z = v[1::2]
@@ -37,40 +60,59 @@ def minsnap(n, d, w, dt):
 
   return minsnap_trajectory
 
-def generate_H_matrix(n, d, dt):
-  '''
-  generate_H_matrix(n, d, dt) calculates the matrix for the minimum
-  snap cost.
-  Parameters:
-    n - total number of polynomials.
-    d - number of terms in each polynomial.
-    dt - Matrix of time spacings, containing Delta t_i in dt[i].
-  Outputs:
-    H - matrix such that the snap squared integral is equal to
-          v^T H v
-  '''
-  H = np.zeros((2*n*d, 2*n*d))
-  # TODO: construct H matrix from H_i1
+if __name__ == '__main__':
 
-  return H
+  n = 4
+  d = 14
 
-def generate_constraint_matrices(n, d, w, dt):
-  '''
-generate_constraint_matrices(n, d, w, dt) calculates the polynomial coefficients for the minimum
-snap trajectory intersecting waypoints w.
-  Parameters:
-    n - total number of polynomials.
-    d - number of terms in each polynomial.
-    w - Matrix of waypoints, containing w_i in w[i].
-    dt - Matrix of time spacings, containing Delta t_i in dt[i].
-  Outputs:
-    Aeq - A matrix from linear equality constraint A_eq v = b_eq
-    beq - b vector from linear equality constraint A_eq v = b_eq
-  '''
+  w = np.zeros((n + 1, 2))
+  dt = np.zeros(n)
 
-  Aeq = np.zeros((0,2*d*n))
-  beq = np.zeros((0,1))
+  w[0] = np.array([-3,-4])
+  w[1] = np.array([ 0, 0])
+  w[2] = np.array([ 2, 3])
+  w[3] = np.array([ 5, 0])
+  w[4] = np.array([ 8, -2])
 
-  # TODO: Construct constraint matrix and vector Aeq and beq from Ab_i1 and Ab_i2
+  dt[0] = 1
+  dt[1] = 1
+  dt[2] = 1
+  dt[3] = 1
 
-  return Aeq, beq
+  # Target trajectory generation
+  minsnap_trajectory = minsnap(n, d, w, dt)
+
+  g = 9.81
+  t0 = 0
+  tf = sum(dt)
+  n_points = 100
+  t = np.linspace(t0, tf, n_points)
+
+  fig = plt.figure(figsize=(4,3))
+  ax = plt.axes()
+  ax.scatter(w[:, 0], w[:, 1], c='r', label='way pts')
+  ax.plot(minsnap_trajectory(t)[:,0], minsnap_trajectory(t)[:,1], label='min-snap trajectory')
+  ax.set_xlabel("y")
+  ax.set_ylabel("z")
+  ax.legend()
+
+  debugging = False
+  # Set debugging to true to verify that the derivatives up to 5 are continuous
+  if debugging:
+    fig2 = plt.figure(figsize=(4,3))
+    plt.plot(t, minsnap_trajectory(t,1)[:], label='1st derivative')
+    plt.legend()
+
+    fig3 = plt.figure(figsize=(4,3))
+    plt.plot(t, minsnap_trajectory(t,2)[:], label='2nd derivative')
+    plt.legend()
+
+    fig4 = plt.figure(figsize=(4,3))
+    plt.plot(t, minsnap_trajectory(t,3)[:], label='3rd derivative')
+    plt.legend()
+
+    fig5 = plt.figure(figsize=(4,3))
+    plt.plot(t, minsnap_trajectory(t,4)[:], label='4th derivative')
+    plt.legend()
+    
+  plt.show()  
