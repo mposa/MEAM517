@@ -82,7 +82,7 @@
     <child link="link_one"/>
     <origin xyz="0 0.15 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort = "100"/>
+    <limit effort = "5"/>
     <dynamics damping="0.0"/>
   </joint>
   <joint name="joint_two" type="continuous">
@@ -90,7 +90,7 @@
     <child link="link_two"/>
     <origin xyz="0 0.1 -1"/>
     <axis xyz="0 1 0"/>
-    <limit effort = "100"/>
+    <limit effort = "5"/>
     <dynamics damping="0.0"/>
   </joint>
   <joint name="joint_three" type="continuous">
@@ -98,7 +98,7 @@
     <child link="link_three"/>
     <origin xyz="0 0.1 -1"/>
     <axis xyz="0 1 0"/>
-    <limit effort = "100"/>
+    <limit effort = "5"/>
     <dynamics damping="0.0"/>
   </joint>
   <joint name="fixed_ball" type="fixed">

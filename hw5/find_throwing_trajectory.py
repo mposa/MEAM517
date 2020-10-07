@@ -105,9 +105,6 @@ def find_throwing_trajectory(N, initial_state, distance, tf):
   t_land_sol = result.GetSolution(t_land)
 
   print(result.get_solution_result())
-  print(x_sol)
-  print(u_sol)
-  print(t_land_sol)
 
   # Reconstruct the trajecotry as a cubic hermite spline
   xdot_sol = np.zeros(x_sol.shape)
@@ -117,10 +114,11 @@ def find_throwing_trajectory(N, initial_state, distance, tf):
   x_traj = PiecewisePolynomial.CubicHermite(timesteps, x_sol.T, xdot_sol.T)
   u_traj = PiecewisePolynomial.ZeroOrderHold(timesteps, u_sol.T)
 
-  return x_traj, u_traj
-
-N = 7
-initial_state = np.zeros(6)
-tf = 5.0
-distance = 15.0
-x_traj, u_traj = find_throwing_trajectory(N, initial_state, distance, tf)
+  return x_traj, u_traj, prog, prog.GetInitialGuess(x), prog.GetInitialGuess(u)
+  
+if __name__ == '__main__':
+  N = 7
+  initial_state = np.zeros(6)
+  tf = 5.0
+  distance = 15.0
+  x_traj, u_traj, prog, x_guess, u_guess = find_throwing_trajectory(N, initial_state, distance, tf)
