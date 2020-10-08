@@ -19,9 +19,9 @@ def landing_constraint(vars):
   q = vars[:3]
   qdot = vars[3:6]
   t_land = vars[-1]
-  pos = np.array([[l*sin(q[0]) + l*sin(q[0] + q[1]) + l*sin(q[0] + q[1] + q[2])],
+  pos = np.array([[-l*sin(q[0]) - l*sin(q[0] + q[1]) - l*sin(q[0] + q[1] + q[2])],
                   [-l*cos(q[0]) - l*cos(q[0] + q[1]) - l*cos(q[0] + q[1] + q[2])]])
-  vel = np.array([[l*qdot[2]*cos(q[0] + q[1] + q[2]) + qdot[0]*(l*cos(q[0]) + l*cos(q[0] + q[1]) + l*cos(q[0] + q[1] + q[2])) + qdot[1]*(l*cos(q[0] + q[1]) + l*cos(q[0] + q[1] + q[2]))],
+  vel = np.array([[-l*qdot[2]*cos(q[0] + q[1] + q[2]) + qdot[0]*(-l*cos(q[0]) - l*cos(q[0] + q[1]) - l*cos(q[0] + q[1] + q[2])) + qdot[1]*(-l*cos(q[0] + q[1]) - l*cos(q[0] + q[1] + q[2]))],
                   [l*qdot[2]*sin(q[0] + q[1] + q[2]) + qdot[0]*(l*sin(q[0]) + l*sin(q[0] + q[1]) + l*sin(q[0] + q[1] + q[2])) + qdot[1]*(l*sin(q[0] + q[1]) + l*sin(q[0] + q[1] + q[2]))]])
 
   # TODO: Express the landing constraint as a function of q, qdot, and t_land
@@ -35,6 +35,6 @@ def AddFinalLandingPositionConstraint(prog, xf, d, t_land):
 
   # TODO: Add the landing distance equality constraint as a system of inequality constraints 
   # using prog.AddConstraint(landing_constraint, lb, ub, vars) 
-  
-  # TODO: Add a constraint that t_land is positive
 
+  # TODO: Add a constraint that t_land is positive
+  pass
