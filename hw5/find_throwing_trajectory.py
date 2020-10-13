@@ -112,13 +112,13 @@ def find_throwing_trajectory(N, initial_state, distance, tf):
     xdot_sol[i] = EvaluateDynamics(plant, plant_context, x_sol[i], u_sol[i])
   
   x_traj = PiecewisePolynomial.CubicHermite(timesteps, x_sol.T, xdot_sol.T)
-  u_traj = PiecewisePolynomial.ZeroOrderHold(timesteps, u_sol.T)
+  u_traj = PiecewisePolynomial.FirstOrderHold(timesteps, u_sol.T)
 
-  return x_traj, u_traj, prog
+  return x_traj, u_traj, prog, prog.GetInitialGuess(x), prog.GetInitialGuess(u)
   
 if __name__ == '__main__':
   N = 7
   initial_state = np.zeros(6)
   tf = 5.0
   distance = 25.0
-  x_traj, u_traj, prog = find_throwing_trajectory(N, initial_state, distance, tf)
+  x_traj, u_traj, prog, x_guess, u_guess = find_throwing_trajectory(N, initial_state, distance, tf)
