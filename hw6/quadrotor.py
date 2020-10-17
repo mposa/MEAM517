@@ -104,17 +104,36 @@ class Quadrotor(object):
 
     return A_d, B_d
 
-  def add_constraints_and_cost(self, prog, x, u, N, dt, x_current):
+  def discrete_time_linearized_dynamics(self, T):
+    # Discrete time version of the linearized dynamics at the fixed point
+    # This function returns A and B matrix of the discrete time dynamics
+    A_c, B_c = self.continuous_time_linearized_dynamics()
+    A_d = np.identity(6) + A_c * T;
+    B_d = B_c * T;
+
+    return A_d, B_d
+
+  def add_initial_state_constraint(self, prog, x, x_current):
     # TODO: impose initial state constraint.
-    # Use AddBoundingBoxConstraint(lb, ub, var)
+    # Use AddBoundingBoxConstraint
 
-    # TODO: impose dynamics constraint.
-    # Use AddLinearEqualityConstraint(expr, value)
+    pass
 
+  def add_input_saturation_constraint(self, prog, x, u, N):
     # TODO: impose input limit constraint.
     # Use AddBoundingBoxConstraint
     # The limits are available through self.umin and self.umax
 
+    pass
+
+  def add_dynamics_constraint(self, prog, x, u, N, T):
+    # TODO: impose dynamics constraint.
+    # Use AddLinearEqualityConstraint(expr, value)
+    A, B = self.discrete_time_linearized_dynamics(T)
+
+    pass
+
+  def add_cost(self, prog, x, u, N):
     # TODO: add cost.
 
     # Placeholder constraint and cost to satisfy QP requirements
@@ -141,7 +160,7 @@ class Quadrotor(object):
 
     # Parameters for the QP
     N = 10
-    dt = 0.1
+    T = 0.1
 
     # Initialize mathematical program and decalre decision variables
     prog = MathematicalProgram()
@@ -153,7 +172,10 @@ class Quadrotor(object):
       u[i] = prog.NewContinuousVariables(2, "u_" + str(i))
 
     # Add constraints and cost
-    self.add_constraints_and_cost(prog, x, u, N, dt, x_current)
+    self.add_initial_state_constraint(prog, x, x_current)
+    self.add_input_saturation_constraint(prog, x, u, N)
+    self.add_dynamics_constraint(prog, x, u, N, T)
+    self.add_cost(prog, x, u, N)
 
     # Adds the stability constraint: V(x_T) <= V(x_0) if using 
     # the clf version of MPC
