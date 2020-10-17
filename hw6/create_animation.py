@@ -7,7 +7,7 @@ import matplotlib.animation as animation
 def x_d(t):
   return np.zeros(6)
 
-def create_animation(x, x_d, tf, n_frames = 60):
+def create_animation(x, tf, n_frames = 60):
   # Sample desired trajectory
   n_samples = 1000
   t_samples = np.linspace(0.0, tf, n_samples)
@@ -48,8 +48,9 @@ def create_animation(x, x_d, tf, n_frames = 60):
     plot = ax.plot([y[i] + a*cos(theta[i]), y[i] - a*cos(theta[i])],
                    [z[i] + a*sin(theta[i]), z[i] - a*sin(theta[i])] , 'g','LineWidtheeta',3)
     
-    ax.set_xlim(x_min - x_padding, x_max + x_padding)
-    ax.set_ylim(y_min - y_padding, y_max + y_padding)
+    if(np.abs((x_max - x_min) - (y_max - y_min)) < 5):
+      ax.set_xlim(x_min - x_padding, x_max + x_padding)
+      ax.set_ylim(y_min - y_padding, y_max + y_padding)
     ax.set_xlabel('y (m)')
     ax.set_ylabel('z (m)')
     ax.set_aspect('equal')
