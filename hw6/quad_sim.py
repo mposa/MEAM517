@@ -3,9 +3,8 @@ from math import sin, cos, pi
 from scipy.integrate import solve_ivp
 from quadrotor import Quadrotor
 import matplotlib.pyplot as plt
-# import numpy.linalg.norm as norm
 
-def simulate_quadrotor(x0, tf, quadrotor, use_mpc=True):
+def simulate_quadrotor(x0, tf, quadrotor, use_mpc=True, use_mpc_with_clf=False, use_clf_qp=False):
   # Simulates a stabilized maneuver on the 2D quadrotor
   # system, with an initial value of x0
   t0 = 0.0
@@ -21,8 +20,11 @@ def simulate_quadrotor(x0, tf, quadrotor, use_mpc=True):
     current_time = t[-1]
     current_x = x[-1]
     current_u_command = np.zeros(2)
+    
     if use_mpc:
-      current_u_command = quadrotor.compute_mpc_feedback(current_x)
+      current_u_command = quadrotor.compute_mpc_feedback(current_x, use_mpc_with_clf)
+    elif use_clf_qp:
+      current_u_command = quadrotor.compute_clf_qp_feedback(current_x)
     else:
       current_u_command = quadrotor.compute_lqr_feedback(current_x)
 
@@ -73,18 +75,20 @@ if __name__ == '__main__':
 
   # Initial state
   d_rand = 1
-  x0 = d_rand * np.random.rand(6)  - d_rand/2
-  # x0 = np.array([-0.40,  0.31,  0.18, -0.3 , -0.38,  0.26])
-  # x0 = np.array([ 0.02,   0.00,  -0.43, -0.47,  -0.47,  0.04])
-  # x0 = np.array([-0.46, -0.45,  0.46,  -0.12, -0.46, -0.06])
-  x0 = np.array([3, 0,0,0,0,0])
-  print(x0)
+  x0 = np.array([0.5, 0.5, 0, 1, 1, 0])
 
   tf = 10;
+
   x, u, t = simulate_quadrotor(x0, tf, quadrotor)
   plot_x_and_u(x, u, t, "MPC")
   x, u, t = simulate_quadrotor(x0, tf, quadrotor, False)
   plot_x_and_u(x, u, t, "LQR")
+  x, u, t = simulate_quadrotor(x0, tf, quadrotor, True, True, False)
+
+  # Initial state to remain in the 1-sublevel of V
+  plot_x_and_u(x, u, t, "MPC using CLF")
+  x0 = np.array([0.5, 0.5, 0, 0, 0, 0])
+  x, u, t = simulate_quadrotor(x0, tf, quadrotor, False, False, True)
+  plot_x_and_u(x, u, t, "CLF QP-version")
 
   plt.show()
-
