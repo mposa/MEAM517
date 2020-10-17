@@ -94,16 +94,6 @@ class Quadrotor(object):
 
     return A, B
 
-  def discrete_time_linearized_dynamics(self, dt):
-    # Discrete time version of the linearized dynamics at the fixed point
-    # This function returns A and B matrix of the discrete time dynamics
-    A_c, B_c = self.continuous_time_linearized_dynamics()
-
-    A_d = expm(A_c * dt)
-    B_d = B_c * dt;
-
-    return A_d, B_d
-
   def discrete_time_linearized_dynamics(self, T):
     # Discrete time version of the linearized dynamics at the fixed point
     # This function returns A and B matrix of the discrete time dynamics
