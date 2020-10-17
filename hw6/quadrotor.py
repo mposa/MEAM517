@@ -138,7 +138,7 @@ class Quadrotor(object):
 
     # Placeholder constraint and cost to satisfy QP requirements
     # TODO: Delete after completing this function
-    prog.AddQuadraticCost(dt * dt)
+    prog.AddQuadraticCost(0)
     prog.AddLinearEqualityConstraint(0, 0)
 
     pass
