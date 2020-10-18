@@ -8,13 +8,14 @@ import pydrake.symbolic as sym
 from pydrake.all import MonomialBasis, OddDegreeMonomialBasis, Variables
 from quadrotor import Quadrotor
 
-def add_constraint_and_cost(prog, x, S, V, Vdot):
+def add_sos_constraint(prog, x, V, Vdot):
   # TODO: Impose constraint on Vdot
   # Use prog.AddSosConstraint(expression)
+  pass
 
+def add_cost(prog, S):
   # TODO: Add cost
   # Use prog.AddLinearCost(expression)
-
   pass
 
 def compute_region_of_attraction(quadrotor):
@@ -35,7 +36,8 @@ def compute_region_of_attraction(quadrotor):
   Vdot = V.Jacobian(x) @ f
 
   # Add SOS constraint and cost
-  add_constraint_and_cost(prog, x, S, V, Vdot)
+  add_sos_constraint(prog, x, V, Vdot)
+  add_cost(prog, S)
 
   # Solve the problem
   print("Start solving...")
