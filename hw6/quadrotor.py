@@ -126,11 +126,6 @@ class Quadrotor(object):
   def add_cost(self, prog, x, u, N):
     # TODO: add cost.
 
-    # Placeholder constraint and cost to satisfy QP requirements
-    # TODO: Delete after completing this function
-    prog.AddQuadraticCost(0)
-    prog.AddLinearEqualityConstraint(0, 0)
-
     pass
 
   def add_mpc_clf_constraint(self, prog, x, N):
@@ -167,6 +162,11 @@ class Quadrotor(object):
     self.add_dynamics_constraint(prog, x, u, N, T)
     self.add_cost(prog, x, u, N)
 
+    # Placeholder constraint and cost to satisfy QP requirements
+    # TODO: Delete after completing this function
+    prog.AddQuadraticCost(0)
+    prog.AddLinearEqualityConstraint(0, 0)
+    
     # Adds the stability constraint: V(x_T) <= V(x_0) if using 
     # the clf version of MPC
     if (use_clf) :
