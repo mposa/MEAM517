@@ -49,8 +49,8 @@ def main():
     surf_1 = ax_1.plot_surface(X_grid[0], X_grid[1], V.reshape(N, N).T)
     surf_2 = ax_2.plot_surface(X_grid[0], X_grid[1], u_opt.reshape(N, N).T)
 
-    mng = plt.get_current_fig_manager()
-    mng.window.showMaximized()
+    # mng = plt.get_current_fig_manager()
+    # mng.window.showMaximized()
 
     plt.show()
 

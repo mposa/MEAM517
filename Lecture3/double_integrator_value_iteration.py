@@ -45,7 +45,7 @@ def main():
     surf_2 = ax_2.plot_surface(X_grid[0], X_grid[1], u_opt.reshape(N, N).T)
 
     mng = plt.get_current_fig_manager()
-    mng.window.showMaximized()
+    # mng.window.showMaximized()
 
     plt.show()
 
@@ -80,7 +80,7 @@ def main():
             ax_2.set_zlabel('$u$', fontsize=16)
 
             plt.draw()
-            plt.pause(0.001)
+            plt.pause(0.2)
 
     print("Done! Total iterations: " + str(iter))
     input()

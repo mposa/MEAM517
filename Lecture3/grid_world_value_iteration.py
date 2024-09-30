@@ -61,8 +61,8 @@ def main():
     
 
     # Different possible initializations
-    # V = 50 * np.random.rand(N * N)
-    V = np.zeros(N*N)
+    V = 50 * np.random.rand(N * N)
+    # V = np.zeros(N*N)
     # V = 50 * np.ones([N*N])
 
     V[0] = 0
@@ -87,8 +87,8 @@ def main():
     fig.colorbar(image, cmap=cmap)
     plt.draw()
     plt.pause(0.001)
-    mng = plt.get_current_fig_manager()
-    mng.window.showMaximized()
+    # mng = plt.get_current_fig_manager()
+    # mng.window.showMaximized()
     plt.show()
 
     while error > min_error and iter < max_iter:

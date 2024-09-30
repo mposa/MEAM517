@@ -23,7 +23,7 @@ N = 1000
 T = 5
 
 # Stopping criteria
-max_iter = 100
+max_iter = 500
 min_err = 1e-6
 
 ## Problem initialization
@@ -35,7 +35,7 @@ tvec = np.linspace(0, T, N)
 u = .01*np.random.randn(N)
 
 # Initialize stopping criteria
-err = np.Inf
+err = np.inf
 iter = 0
 
 fig = plt.figure()
@@ -46,7 +46,6 @@ plt.show()
 def dynamics(t, x, tvec, uvec):
   u = np.interp(t, tvec, uvec)
   return [math.sin(x[2]), math.cos(x[2]), u];
-  return -0.5 * y
 
 def costate_dynamics(t, costate, tvec, xvec, xg):
   # H = costate'f(x,u) + g(x,u)
@@ -84,7 +83,7 @@ while err > min_err and iter <= max_iter:
   dJ_du = dg_du + df_du.dot(costate)
 
   err = np.linalg.norm(dJ_du)
-  alpha = 1e-4
+  alpha = 5e-5
   u = u - alpha * dJ_du 
   print(err)
 
