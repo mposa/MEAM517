@@ -53,7 +53,6 @@ def cartpole_balancing_example():
 
         # MultibodyPlant has many (optional) input ports, so we must pass the
         # input_port_index to LQR.
-        import pdb; pdb.set_trace()
         return LinearQuadraticRegulator(
             plant,
             context,
@@ -62,7 +61,7 @@ def cartpole_balancing_example():
             input_port_index=plant.get_actuation_input_port().get_index())
 
     builder = DiagramBuilder()
-    plant, scene_graph = AddMultibodyPlantSceneGraph(builder, time_step=0.1)
+    plant, scene_graph = AddMultibodyPlantSceneGraph(builder, time_step=0.0)
     parser = Parser(plant)
     ConfigureParser(parser)
     parser.AddModelsFromUrl("package://underactuated/models/cartpole.urdf")
@@ -90,7 +89,7 @@ def cartpole_balancing_example():
         context.SetTime(0.0)
         plant.SetPositionsAndVelocities(
             plant_context,
-            UprightState() + 0.1 * np.random.randn(4,),
+            UprightState() + 0.5 * np.random.randn(4,),
         )
         simulator.Initialize()
         simulator.AdvanceTo(duration)

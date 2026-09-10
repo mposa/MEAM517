@@ -86,7 +86,7 @@ def main():
     image = plt.imshow(V.reshape(N, N).T, vmin=0, vmax=3*N, cmap=cmap)
     fig.colorbar(image, cmap=cmap)
     plt.draw()
-    plt.pause(0.001)
+    plt.pause(0.01)
     # mng = plt.get_current_fig_manager()
     # mng.window.showMaximized()
     plt.show()

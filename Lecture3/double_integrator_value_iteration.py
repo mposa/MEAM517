@@ -26,8 +26,8 @@ def main():
     f = lambda x, xdot, u: u
 
     # running cost
-    # cost = lambda x, xdot, u: x ** 2 + xdot ** 2 + 2 * u ** 2
-    cost = lambda x, xdot, u: int(x != 0 or xdot != 0)
+    cost = lambda x, xdot, u: x ** 2 + xdot ** 2 + 2 * u ** 2
+    # cost = lambda x, xdot, u: int(x != 0 or xdot != 0)
 
     [T, C] = discretize_second_order_system(f, cost, x, xdot, u, dt)
 
